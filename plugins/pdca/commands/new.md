@@ -1,8 +1,6 @@
 ---
-name: pdca:new
-description: Create a new feature spec from template
-args: <feature-name>
-user-invocable: true
+description: "Create a new feature spec from template"
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:new <feature-name>

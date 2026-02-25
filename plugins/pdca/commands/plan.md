@@ -1,8 +1,6 @@
 ---
-name: pdca:plan
 description: "[P] PLAN - Build feature spec via structured Q&A"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:plan <feature-name>

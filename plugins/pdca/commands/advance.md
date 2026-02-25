@@ -1,8 +1,6 @@
 ---
-name: pdca:advance
-description: Manually advance a feature to the next phase
-args: <feature-name>
-user-invocable: true
+description: "Manually advance a feature to the next phase"
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:advance <feature-name>

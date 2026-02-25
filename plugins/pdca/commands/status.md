@@ -1,8 +1,6 @@
 ---
-name: pdca:status
-description: Show detailed phase status for a feature
-args: <feature-name>
-user-invocable: true
+description: "Show detailed phase status for a feature"
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:status <feature-name>

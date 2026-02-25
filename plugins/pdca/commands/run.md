@@ -1,8 +1,6 @@
 ---
-name: pdca:run
 description: "Run the PDCA cycle — auto-chains autonomous phases, pauses for interactive ones"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:run <feature-name>

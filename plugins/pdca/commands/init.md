@@ -1,7 +1,5 @@
 ---
-name: pdca:init
-description: Initialize PDCA features directory in the current project
-user-invocable: true
+description: "Initialize PDCA features directory in the current project"
 ---
 
 # /pdca:init

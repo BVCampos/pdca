@@ -1,8 +1,6 @@
 ---
-name: pdca:do
 description: "[D] DO - Implement and self-verify in a loop (up to max_iterations)"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:do <feature-name>

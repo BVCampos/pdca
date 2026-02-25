@@ -1,8 +1,6 @@
 ---
-name: pdca:review-claude
 description: "[P] PLAN - Claude reviews the spec for gaps and risks"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:review-claude <feature-name>

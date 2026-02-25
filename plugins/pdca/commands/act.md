@@ -1,8 +1,6 @@
 ---
-name: pdca:act
 description: "[A] ACT - Act on findings, iterate or close the feature"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:act <feature-name>

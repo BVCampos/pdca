@@ -1,8 +1,6 @@
 ---
-name: pdca:check
 description: "[C] CHECK - Cold-eye verification of remaining issues (optional)"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:check <feature-name>

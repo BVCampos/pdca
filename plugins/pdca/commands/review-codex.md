@@ -1,8 +1,6 @@
 ---
-name: pdca:review-codex
 description: "[P] PLAN - Export spec for Codex review and record feedback"
-args: <feature-name>
-user-invocable: true
+argument-hint: "<feature-name>"
 ---
 
 # /pdca:review-codex <feature-name>

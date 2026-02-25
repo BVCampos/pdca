@@ -1,7 +1,5 @@
 ---
-name: pdca:list
-description: List all PDCA features and their current phase
-user-invocable: true
+description: "List all PDCA features and their current phase"
 ---
 
 # /pdca:list
