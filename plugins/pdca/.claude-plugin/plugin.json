@@ -2,5 +2,7 @@
   "name": "pdca",
   "version": "1.0.0",
   "description": "Spec-driven development workflow: Plan, Review (Claude), Review (Codex), Implement, Verify",
-  "author": "Bernardo Campos"
+  "author": {
+    "name": "Bernardo Campos"
+  }
 }
