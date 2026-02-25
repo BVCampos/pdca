@@ -26,6 +26,7 @@ usage() {
     echo "  list                  List all features and their current phase"
     echo "  status <feature-name> Show detailed phase status for a feature"
     echo "  advance <feature-name> Manually advance to the next phase"
+    echo "  run <feature-name>    Run the PDCA cycle (auto-chains autonomous phases)"
     echo ""
     echo "PDCA Cycle (use in Claude Code):"
     echo ""
@@ -325,6 +326,171 @@ cmd_advance() {
     fi
 }
 
+# Check if a phase is autonomous (no user input needed)
+is_autonomous() {
+    local phase="$1"
+    case "$phase" in
+        review-claude|do|check) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# Build the prompt for an autonomous phase
+build_prompt() {
+    local phase="$1"
+    local name="$2"
+    local spec_file="$PDCA_DIR/${name}.md"
+
+    # Read the full spec content
+    local spec_content
+    spec_content=$(cat "$spec_file")
+
+    case "$phase" in
+        review-claude)
+            cat <<PROMPT
+You are running the PDCA review-claude phase for feature "${name}".
+
+Read the following spec and perform a systematic review across 5 dimensions:
+1. Completeness Check
+2. Ambiguity Detection
+3. Edge Case Review
+4. Security & Privacy
+5. Consistency Check
+
+Write your findings to the "Review Notes (Claude)" section of the spec file at pdca/features/${name}.md.
+Rate each dimension: PASS, NEEDS WORK, or CRITICAL.
+Provide a summary recommendation: APPROVE, REVISE, or BLOCK.
+
+If APPROVE: set review_claude phase to done, set status to review-codex, set review_codex to active.
+If REVISE or BLOCK: keep status as review-claude and list items to fix.
+
+Here is the current spec:
+
+${spec_content}
+PROMPT
+            ;;
+        do)
+            cat <<PROMPT
+You are running the PDCA do phase for feature "${name}".
+
+Read the spec at pdca/features/${name}.md and implement the feature in a self-iterating loop:
+1. Read and internalize the spec (context, requirements, technical design, edge cases, review notes)
+2. Explore the codebase to understand current architecture
+3. Create an implementation plan and write it to the Implementation Log
+4. Loop up to max_iterations times: implement/fix → self-verify each requirement → if all PASS break, else fix and repeat
+5. Update the iteration counter in frontmatter after each iteration
+6. When done: set do phase to done. If all PASS, skip check and set status to act. If issues remain, set status to check.
+
+Here is the current spec:
+
+${spec_content}
+PROMPT
+            ;;
+        check)
+            cat <<PROMPT
+You are running the PDCA check phase for feature "${name}".
+
+This is a cold-eye verification — you have NO context from implementation. Read everything fresh.
+
+1. Read the spec at pdca/features/${name}.md
+2. Read the Implementation Log to see what was done
+3. Read the Verification Results from DO's self-verification
+4. For each requirement: locate the code, verify correctness, check edge cases, rate PASS/PARTIAL/FAIL
+5. Spot-check items DO marked PASS (catch self-verification bias)
+6. Run tests if possible
+7. Append a "Cold-Eye Review" section to Verification Results
+8. Set check to done, status to act, act to active
+
+Here is the current spec:
+
+${spec_content}
+PROMPT
+            ;;
+    esac
+}
+
+cmd_run() {
+    local name="${1:-}"
+    if [[ -z "$name" ]]; then
+        echo -e "${RED}Usage: pdca run <feature-name>${NC}"
+        exit 1
+    fi
+
+    local spec_file="$PDCA_DIR/${name}.md"
+    if [[ ! -f "$spec_file" ]]; then
+        echo -e "${RED}Feature '${name}' not found at ${spec_file}${NC}"
+        exit 1
+    fi
+
+    # Check claude is available
+    if ! command -v claude &> /dev/null; then
+        echo -e "${RED}claude CLI not found. Install Claude Code first.${NC}"
+        exit 1
+    fi
+
+    while true; do
+        local status
+        status=$(get_field "$spec_file" "status")
+
+        if [[ "$status" == "done" ]]; then
+            echo ""
+            echo -e "${GREEN}${BOLD}Feature '${name}' is complete! Full PDCA cycle done.${NC}"
+            break
+        fi
+
+        local group
+        group=$(pdca_group_for "$status")
+
+        echo ""
+        echo -e "${BOLD}─── [${group}] ${status} ───${NC}"
+
+        if is_autonomous "$status"; then
+            echo -e "${CYAN}Running autonomously via claude...${NC}"
+            echo ""
+
+            local prompt
+            prompt=$(build_prompt "$status" "$name")
+
+            # Run claude in non-interactive mode with --print flag
+            if claude -p "$prompt" --allowedTools "Edit,Write,Read,Glob,Grep,Bash" 2>&1; then
+                # Re-read status — claude should have advanced it
+                local new_status
+                new_status=$(get_field "$spec_file" "status")
+                if [[ "$new_status" == "$status" ]]; then
+                    echo -e "${YELLOW}Phase did not advance. Claude may need manual intervention.${NC}"
+                    echo -e "Run ${CYAN}/pdca:${status} ${name}${NC} in Claude Code interactively."
+                    break
+                fi
+                echo -e "${GREEN}Phase ${status} complete.${NC}"
+                # Continue the loop — will pick up the next phase
+            else
+                echo -e "${RED}Claude exited with an error.${NC}"
+                echo -e "Run ${CYAN}/pdca:${status} ${name}${NC} in Claude Code interactively."
+                break
+            fi
+        else
+            # Interactive phase — hand off to user
+            echo -e "${YELLOW}This phase needs your input.${NC}"
+            echo -e "Opening interactive Claude Code session..."
+            echo ""
+
+            # Run claude interactively with the slash command as initial prompt
+            claude -p "/pdca:${status} ${name}" --resume 2>&1 || true
+
+            # Re-read status after interactive session
+            local new_status
+            new_status=$(get_field "$spec_file" "status")
+            if [[ "$new_status" == "$status" ]]; then
+                echo ""
+                echo -e "${YELLOW}Phase did not advance. Run 'pdca run ${name}' again when ready.${NC}"
+                break
+            fi
+            echo -e "${GREEN}Phase ${status} complete.${NC}"
+            # Continue the loop
+        fi
+    done
+}
+
 # Main dispatch
 case "${1:-}" in
     init)    cmd_init ;;
@@ -332,6 +498,7 @@ case "${1:-}" in
     list)    cmd_list ;;
     status)  cmd_status "${2:-}" ;;
     advance) cmd_advance "${2:-}" ;;
+    run)     cmd_run "${2:-}" ;;
     help|-h|--help) usage ;;
     *)       usage; exit 1 ;;
 esac
