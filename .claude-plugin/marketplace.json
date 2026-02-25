@@ -1,0 +1,22 @@
+{
+  "name": "pdca",
+  "owner": {
+    "name": "Bernardo Campos"
+  },
+  "metadata": {
+    "description": "PDCA (Plan-Do-Check-Act) spec-driven development workflow for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "pdca",
+      "source": "./plugins/pdca",
+      "description": "Spec-driven development workflow: Plan (build spec via Q&A + reviews) → Do (implement + self-verify loop) → Check (cold-eye verification) → Act (iterate or close)",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bernardo Campos"
+      },
+      "keywords": ["pdca", "workflow", "spec-driven", "development", "quality"]
+    }
+  ]
+}
