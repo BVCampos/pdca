@@ -37,7 +37,7 @@ usage() {
     echo "  [D] DO"
     echo "    /pdca:do <name>             Implement + self-verify loop (up to N iterations)"
     echo "  [C] CHECK"
-    echo "    /pdca:check <name>          Cold-eye verification (optional if DO self-verified)"
+    echo "    /pdca:check <name>          Cold-eye verification (always runs after DO)"
     echo "  [A] ACT"
     echo "    /pdca:act <name>            Act on findings, iterate or close"
 }

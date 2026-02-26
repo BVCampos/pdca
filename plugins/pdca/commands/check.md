@@ -7,9 +7,9 @@ argument-hint: "<feature-name>"
 
 **PDCA Phase: [C] CHECK**
 
-Fresh-session verification of the implementation. This phase runs when DO's self-verification had remaining PARTIAL/FAIL items, or when you want an independent cold-eye review.
+Fresh-session verification of the implementation. This phase always runs after DO — even when DO reports all requirements as PASS.
 
-If DO self-verified all requirements as PASS, this phase is automatically skipped and you go straight to ACT.
+DO has inherent self-verification bias (it just wrote the code). CHECK provides an independent perspective that consistently catches issues DO misses.
 
 ## Instructions
 

@@ -82,25 +82,7 @@ Update the `iteration` field in frontmatter after each iteration. Even a single-
    ```
 
 2. Set do phase to `done`.
-3. If ALL requirements PASS:
-   - Set check phase to `skipped` (self-verification was sufficient)
-   - Set top-level status to `act`
-   - Set act phase to `active`
-   - Tell the user:
-
-   ```
-   ---
-   DO phase complete — all requirements verified in [N] iterations.
-   CHECK is skipped (self-verified). Moving straight to ACT.
-
-   >> Exit this session and start a fresh one, then run:
-   >>   /pdca:act <feature-name>
-
-   Fresh sessions prevent context drift — ACT should evaluate objectively.
-   ---
-   ```
-
-4. If there are remaining PARTIAL/FAIL items:
+3. **Always advance to CHECK** — even if all requirements PASS.
    - Set top-level status to `check`
    - Set check phase to `active`
    - Tell the user:
@@ -108,7 +90,7 @@ Update the `iteration` field in frontmatter after each iteration. Even a single-
    ```
    ---
    DO phase complete — [X] of [Y] requirements passing after [N] iterations.
-   Moving to CHECK for a cold-eye review of remaining issues.
+   Moving to CHECK for cold-eye verification.
 
    >> Exit this session and start a fresh one, then run:
    >>   /pdca:check <feature-name>
@@ -116,6 +98,18 @@ Update the `iteration` field in frontmatter after each iteration. Even a single-
    Fresh sessions prevent context drift — CHECK should review with no prior assumptions.
    ---
    ```
+
+   **Why CHECK always runs:** DO has inherent self-verification bias — it just wrote the code. In practice, CHECK consistently catches issues that DO misses, even when DO reports all PASS. The cost of running CHECK is low; the cost of shipping a false PASS is high.
+
+### Commit Strategy
+
+Commit your work at structured points to preserve progress and enable rollback:
+
+1. **After each iteration** of the loop: commit with message `feat(<feature-name>): iteration N — [summary of what was implemented/fixed]`
+2. **After the loop completes**: if the final commit doesn't capture the verification results update, make one more commit.
+3. **Don't commit the spec file changes** separately — include spec updates (Implementation Log, Verification Results) in the same commit as the code they document.
+
+If you're unsure about the commit convention, check `git log --oneline -5` to match the project's style.
 
 ### Important Notes
 - Each iteration should be focused: don't re-implement everything, only fix what failed.

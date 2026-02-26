@@ -12,10 +12,10 @@ The plugin maps directly to the PDCA quality cycle:
 3. **Codex Review** (`/pdca:review-codex`) - External second opinion from Codex via copy-paste bridge
 
 ### [D] DO - Build it (self-iterating loop)
-4. **Implement + Verify Loop** (`/pdca:do`) - Implements the spec, then self-verifies against every requirement, then fixes failures — repeating up to `max_iterations` times (default: 3). If all requirements PASS, CHECK is skipped.
+4. **Implement + Verify Loop** (`/pdca:do`) - Implements the spec, then self-verifies against every requirement, then fixes failures — repeating up to `max_iterations` times (default: 3). Always advances to CHECK afterward.
 
-### [C] CHECK - Cold-eye review (optional)
-5. **Independent Verification** (`/pdca:check`) - Only runs if DO had remaining PARTIAL/FAIL items. A fresh session reviews the code with no implementation bias.
+### [C] CHECK - Cold-eye review (always runs)
+5. **Independent Verification** (`/pdca:check`) - Always runs after DO. A fresh session reviews the code with no implementation bias. DO has inherent self-verification bias, so CHECK provides a necessary independent perspective.
 
 ### [A] ACT - Decide what's next
 6. **Act** (`/pdca:act`) - Review findings and decide: close the feature, iterate back to DO (fix implementation), or iterate back to PLAN (fix spec)

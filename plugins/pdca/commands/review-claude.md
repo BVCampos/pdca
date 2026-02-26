@@ -89,6 +89,19 @@ Fresh sessions prevent context drift — the next step should read the spec cold
    - List specific items to address
    - Tell user to fix the issues and re-run `/pdca:review-claude <feature-name>` in this same session
 
+### Review Strategy (medium/high complexity)
+
+For features with medium or high complexity, use **parallel subagents** to review different aspects simultaneously rather than doing a single sequential pass. This produces significantly more thorough reviews.
+
+Recommended approach:
+1. Identify 3-5 distinct review areas based on the requirements (e.g., "join request flow", "data model changes", "test coverage", "auth/permissions").
+2. Launch parallel Explore agents, one per area, each focused on verifying correctness and finding issues in its domain.
+3. Collect findings from all agents and synthesize into the Review Notes section.
+
+This catches issues that a single-pass review misses because each subagent can deeply examine its area without context pressure from the rest of the review.
+
+For low complexity features (1-3 requirements), a single-pass review is fine.
+
 ### Issues List
 
 When the review finds issues, write a prioritized **Issues to Fix** list at the end of Review Notes (Claude):
