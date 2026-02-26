@@ -57,9 +57,29 @@ Between phases, announce the transition clearly:
 ───────────────────────────────────
 ```
 
+### Handling REVISE from review-claude
+
+When review-claude returns REVISE (not APPROVE), the run loop pauses:
+
+1. **Present the findings** to the user — summarize what needs fixing.
+2. **Ask the user how to proceed** with these options:
+   - **Fix and re-review** (recommended for implementation gaps or code issues): Make the fixes in the current session, then re-run the review-claude logic. If the re-review returns APPROVE, continue the loop. If it returns REVISE again, pause and ask again.
+   - **Iterate back to PLAN**: If the spec itself needs revision (not just code), reset to plan phase and pause for interactive Q&A.
+3. **After REVISE is resolved** (review-claude passes), ask the user whether to proceed with review-codex or skip it. Don't silently skip review-codex — let the user decide.
+
+### Handling Decisions in Autonomous Phases
+
+Autonomous phases may surface questions that require user judgment (e.g., "should chat be gated on caller's premium or owner's?"). When this happens:
+
+1. **Pause the autonomous execution** and present the decision to the user.
+2. **Wait for the user's answer** before continuing the phase.
+3. **Record the decision** in the relevant spec section (Q&A Log, Review Notes, or Technical Design).
+4. **Resume the phase** with the decision applied.
+
+This is expected behavior — "autonomous" means no user input is needed for *routine* execution, but design decisions always need user judgment.
+
 ### Important Notes
 - The whole point of this command is convenience — the user types one command and the cycle runs.
 - For autonomous phases, do NOT ask the user for confirmation between them. Just chain and go.
 - For interactive phases, you must pause and interact with the user as the phase requires.
-- If an autonomous phase fails to advance (e.g., review-claude returns REVISE), stop the loop and tell the user what needs fixing.
 - Always re-read the spec from disk before starting each phase (don't rely on cached content).

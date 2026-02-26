@@ -69,7 +69,7 @@ Tests: X/Y passing
 - If there are PARTIAL/FAIL items AND iterations remaining: **continue the loop** — go back to Step 1 with a focused fix list
 - If there are PARTIAL/FAIL items AND no iterations remaining: **break the loop** — move to completion with issues noted
 
-Update the `iteration` field in frontmatter after each iteration.
+Update the `iteration` field in frontmatter after each iteration. Even a single-pass implementation counts as iteration 1 — always increment from 0 to 1 after the first implement+verify pass.
 
 ### After the Loop
 

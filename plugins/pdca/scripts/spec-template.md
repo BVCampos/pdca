@@ -63,6 +63,10 @@ _Requirement-by-requirement verification._
 | # | Requirement | Status | Notes |
 |---|-------------|--------|-------|
 
+## Check Results
+
+_Cold-eye verification findings and residual issues._
+
 ## Act Log
 
 _Corrective actions taken, iterations, and final disposition._

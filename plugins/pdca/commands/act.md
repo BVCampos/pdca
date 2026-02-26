@@ -43,6 +43,11 @@ Present the user with clear options based on the findings:
 - Propose a focused action plan for the next iteration
 - Note: this resets the iteration counter so DO gets fresh attempts
 
+**If there are only Low-severity residual issues (all requirements PASS but with minor gaps):**
+- Recommend: **Quick fix and close**
+- List the minor issues and confirm the user wants them fixed in-place
+- This avoids a full DO cycle for trivial fixes
+
 **If there are spec issues (requirements that need updating):**
 - Recommend: **Iterate back to PLAN**
 - Explain which requirements need revision and why
@@ -81,6 +86,22 @@ Iterating back to DO to address [N] issues. Iteration counter reset.
 Fresh sessions prevent context drift — DO should read the spec and act log fresh.
 ---
 ```
+
+**Option D: Quick fix and close (minor residuals only)**
+
+Use this when all requirements PASS but CHECK found Low-severity residual issues (theoretical race conditions, test coverage gaps, minor code quality items).
+
+1. Fix the residual issues in-place (code changes + tests).
+2. Run tests to verify.
+3. Write to the **Act Log** section:
+   - Disposition: CLOSED (with quick fixes)
+   - Residual issues fixed: [list]
+   - Test results after fixes
+4. Set act phase to `done`
+5. Set top-level status to `done`
+6. Tell user: "Feature '<feature-name>' is complete! Quick fixes applied for [N] residual issues."
+
+**Important**: Only use this for genuinely minor issues. If any fix requires significant code changes, architectural decisions, or could introduce regressions, use Option B (iterate to DO) instead.
 
 **Option C: Iterate back to PLAN (fix spec)**
 1. Write to the **Act Log** section:

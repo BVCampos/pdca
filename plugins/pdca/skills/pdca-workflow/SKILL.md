@@ -50,6 +50,8 @@ The DO phase is the engine of the workflow. Within a single session it runs:
 - **Explicit user control** - Phase transitions require user invocation, not auto-advancement
 - **PDCA is a cycle** - The ACT phase can loop back to DO or PLAN, making continuous improvement possible
 - **DO self-iterates** - The inner loop (implement→verify→fix) runs autonomously; the outer loop (PDCA) requires user judgment
+- **Implementation-aware** - When code already exists, plan and review phases adapt by auditing what's built before spec'ing what's missing
+- **Decisions surface to the user** - Autonomous phases pause when they discover design decisions that need human judgment
 
 ## Spec File Location
 

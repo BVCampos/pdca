@@ -18,6 +18,18 @@ Conduct a deep, structured Q&A session to build a comprehensive feature spec.
 4. Check the frontmatter `status` field. If it's not `plan`, warn the user that this feature is not in the plan phase. Ask if they want to continue anyway or run the correct phase command.
 5. Set the plan phase to `active` in the frontmatter if not already.
 
+### Existing Implementation Check
+
+Before starting Q&A, check if code already exists for this feature:
+
+1. Run `git log --oneline -10` and check recent commits for references to this feature.
+2. If implementation exists, quickly scan the codebase to understand what's already built.
+3. If there IS existing code:
+   - Build an **implementation state table** mapping each planned change to its current status (done / partial / not started).
+   - Share this table with the user before Round 1 — it sets context for what the Q&A should focus on.
+   - During Q&A, focus on **gaps and unresolved decisions** rather than re-discussing what's already built.
+   - In the spec's Context section, note which commits contain existing work.
+
 ### Planning Q&A (4 Rounds)
 
 Conduct the Q&A in structured rounds. For each round, ask 3-5 targeted questions, wait for user answers, then record the Q&A in the spec file.

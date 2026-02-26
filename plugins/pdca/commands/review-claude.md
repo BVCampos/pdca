@@ -17,6 +17,20 @@ Read the spec with fresh eyes and conduct a systematic review.
 3. Check the frontmatter `status` field. If it's not `review-claude`, warn the user. Ask if they want to continue anyway.
 4. Set the review_claude phase to `active` in the frontmatter.
 
+### Implementation-Aware Review
+
+Before starting the review, check if implementation already exists:
+
+1. Check git log and the codebase for existing code related to this feature.
+2. **If no implementation exists**: Review the spec only (standard flow below).
+3. **If implementation exists**: Review BOTH the spec quality AND the implementation correctness. For each requirement:
+   - Is it implemented? Where? (file + function)
+   - Is the implementation correct against the requirement?
+   - Are there bugs, race conditions, or missing edge cases in the actual code?
+   - Build a completeness table: `| # | Requirement | Implemented? | Gap |`
+
+This hybrid review catches real issues that a spec-only review would miss. Write findings from both the spec review and the implementation audit into the Review Notes section.
+
 ### Systematic Review
 
 Read the entire spec and evaluate it across these dimensions. For each, provide specific findings (not generic advice):
@@ -74,6 +88,19 @@ Fresh sessions prevent context drift — the next step should read the spec cold
    - Keep status as `review-claude`
    - List specific items to address
    - Tell user to fix the issues and re-run `/pdca:review-claude <feature-name>` in this same session
+
+### Issues List
+
+When the review finds issues, write a prioritized **Issues to Fix** list at the end of Review Notes (Claude):
+
+```markdown
+### Issues to Fix (Priority Order)
+
+1. **[MUST]** [description] — [why it blocks shipping]
+2. **[SHOULD]** [description] — [impact if not fixed]
+```
+
+Use **[MUST]** for blocking issues and **[SHOULD]** for important but non-blocking ones. This list becomes the fix checklist when REVISE is the outcome.
 
 ### Important Notes
 - Be genuinely critical. The point is to find problems before implementation.
